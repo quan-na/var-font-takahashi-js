@@ -2,9 +2,9 @@
                   l e n g t h        2d  array         slide
     c s s 2 d     using   div        s l i d e         notes
     transform
-                  javascript         center
+                  java-script        center
                   f a d i n g        d i v
-                  animation
+                  ani-ma-tion
 
   **/
 /*
