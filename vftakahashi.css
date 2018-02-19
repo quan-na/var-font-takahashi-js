@@ -1,0 +1,9 @@
+/* This item is for text width calibration */
+#Test
+{
+    position: absolute;
+    visibility: hidden;
+    height: auto;
+    width: auto;
+    white-space: nowrap;
+}
