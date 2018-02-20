@@ -10,12 +10,7 @@
           w   =   word
 
   **/
-/*
-var test = document.getElementById("Test");
-test.style.fontSize = fontSize;
-var height = (test.clientHeight + 1) + "px";
-var width = (test.clientWidth + 1) + "px";
-*/
+
 function ratio(tagName) {
     switch (tagName.toLowerCase()) {
     case 'w0':
@@ -48,6 +43,9 @@ function calibrate() {
         var unit = slides[i].clientHeight / scale;
         var curPos = 0.0;
         for (var j=0; j<words.length; j++) {
+            if (0 == ratio(words[j].tagName)) {
+                continue;
+            }
             words[j].style.top = curPos;
             words[j].style.transform = "scale("+
                 (slides[i].clientWidth*1.0/words[j].clientWidth).toFixed(5)+
@@ -61,51 +59,73 @@ function calibrate() {
 
 document.addEventListener("DOMContentLoaded", function(ev) {
     calibrate();
-    // TODO: hide/show/animate slides
-    // css opacity
+
     var slides = document.getElementsByTagName('slide');
     var curSlide = 0;
-    slides[curSlide].style. visibility = 'visible';
+    slides[curSlide].style.opacity = 1.0;
+
     var noteShowing = false;
     var noteTag;
     function showNote() {
         var tags = slides[curSlide].children;
         for (var j=0; j<tags.length; j++)
             if (tags[j].tagName.toLowerCase() == 'note') {
-                tags[j].style.visibility = 'visible';
+                tags[j].style.opacity = 1.0;
                 noteTag = tags[j];
                 noteShowing = true;
                 return;
             }
     }
     function hideNote() {
-        noteTag.style.visibility = 'hidden';
+        noteTag.style.opacity = 0.0;
         noteShowing = false;
     }
+
     function nextSlide() {
         if (curSlide < slides.length-1) {
-            slides[curSlide].style.visibility = 'hidden';
+            slides[curSlide].style.opacity = 0.0;
             curSlide++;
-            slides[curSlide].style.visibility = 'visible';
+            slides[curSlide].style.opacity = 1.0;
         }
     }
     function previousSlide() {
         if (curSlide > 0) {
-            slides[curSlide].style.visibility = 'hidden';
+            slides[curSlide].style.opacity = 0.0;
             curSlide--;
-            slides[curSlide].style.visibility = 'visible';
+            slides[curSlide].style.opacity = 1.0;
         }
     }
+
     document.addEventListener("click", function(ev) {
         var body = document.getElementsByTagName('body')[0];
         if (noteShowing)
             hideNote();
         else if (ev.clientY > body.clientHeight*4/5)
             showNote();
-        else if (ev.clientX < body.clientWidth/2)
+        else if (ev.clientX < body.clientWidth/3)
             previousSlide();
-        else
+        else if (ev.clientX > body.clientWidth*2/3)
             nextSlide();
+    });
+    document.addEventListener('keydown', function(ev) {
+        switch (ev.keyCode) {
+        case 37: // left
+            if (!noteShowing)
+                previousSlide();
+            break;
+        case 38: // up
+            if (!noteShowing)
+                showNote();
+            break;
+        case 39: // right
+            if (!noteShowing)
+                nextSlide();
+            break;
+        case 40: // down
+            if (noteShowing)
+                hideNote();
+            break;
+        }
     });
 });
 window.addEventListener('resize', (ev) => {
