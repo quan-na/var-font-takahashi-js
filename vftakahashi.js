@@ -61,6 +61,52 @@ function calibrate() {
 
 document.addEventListener("DOMContentLoaded", function(ev) {
     calibrate();
+    // TODO: hide/show/animate slides
+    // css opacity
+    var slides = document.getElementsByTagName('slide');
+    var curSlide = 0;
+    slides[curSlide].style. visibility = 'visible';
+    var noteShowing = false;
+    var noteTag;
+    function showNote() {
+        var tags = slides[curSlide].children;
+        for (var j=0; j<tags.length; j++)
+            if (tags[j].tagName.toLowerCase() == 'note') {
+                tags[j].style.visibility = 'visible';
+                noteTag = tags[j];
+                noteShowing = true;
+                return;
+            }
+    }
+    function hideNote() {
+        noteTag.style.visibility = 'hidden';
+        noteShowing = false;
+    }
+    function nextSlide() {
+        if (curSlide < slides.length-1) {
+            slides[curSlide].style.visibility = 'hidden';
+            curSlide++;
+            slides[curSlide].style.visibility = 'visible';
+        }
+    }
+    function previousSlide() {
+        if (curSlide > 0) {
+            slides[curSlide].style.visibility = 'hidden';
+            curSlide--;
+            slides[curSlide].style.visibility = 'visible';
+        }
+    }
+    document.addEventListener("click", function(ev) {
+        var body = document.getElementsByTagName('body')[0];
+        if (noteShowing)
+            hideNote();
+        else if (ev.clientY > body.clientHeight*4/5)
+            showNote();
+        else if (ev.clientX < body.clientWidth/2)
+            previousSlide();
+        else
+            nextSlide();
+    });
 });
 window.addEventListener('resize', (ev) => {
     calibrate();
@@ -68,6 +114,3 @@ window.addEventListener('resize', (ev) => {
 window.addEventListener('orientationChange', (ev) => {
     calibrate();
 });
-
-// TODO: hide/show/animate slides
-// css opacity

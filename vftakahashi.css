@@ -14,6 +14,7 @@ slide {
     position: absolute;
     width: 512px;
     height: 512px;
+    visibility: hidden; /* js show */
     /* background-color: #FFFFF0; /* Ivory, for testing, remove later */
 }
 
@@ -47,4 +48,11 @@ w2 {
 }
 w3 {
     font-size: 20px;
+}
+
+slide > note {
+    visibility: hidden;
+    position: fixed;
+    top: 0px;
+    left: 0px;
 }
