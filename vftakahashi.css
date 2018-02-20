@@ -1,9 +1,51 @@
-/* This item is for text width calibration */
-#Test
+@import url('https://fonts.googleapis.com/css?family=Fira+Sans:900&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext,vietnamese');
+
+body
 {
+    margin:0px;
+    padding:0px;
+    width:100%;
+    height:100%;min-height: 100%;
+    overflow: hidden;
+    background-color: #FFF8DC; /* Cormsilk */
+}
+
+slide {
     position: absolute;
-    visibility: hidden;
-    height: auto;
-    width: auto;
+    left: 10%; /* To calibrate using js */
+    top: 10%; /* To calibrate using js */
+    width: 512px;
+    height: 512px;
+    background-color: #FFFFF0; /* Ivory, for testing, remove later */
+}
+
+w0, w1, w2, w3 {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    font-family: 'Fira Sans', sans-serif;
+    text-transform: uppercase;
+    font-weight: 900;
+    height: auto; /* To calibrate using js */
+    width: auto; /* To calibrate using js */
     white-space: nowrap;
+}
+
+w0 {
+    color: #4169E1; /* Royal Blue web*/
+    font-size: 64px;
+}
+
+w1, w2, w3 {
+    color: #002366; /* Royal Blue Traditional */
+}
+
+w1 {
+    font-size: 40px;
+}
+w2 {
+    font-size: 32px;
+}
+w3 {
+    font-size: 20px;
 }
