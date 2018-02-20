@@ -12,22 +12,21 @@ body
 
 slide {
     position: absolute;
-    left: 10%; /* To calibrate using js */
-    top: 10%; /* To calibrate using js */
     width: 512px;
     height: 512px;
-    background-color: #FFFFF0; /* Ivory, for testing, remove later */
+    /* background-color: #FFFFF0; /* Ivory, for testing, remove later */
 }
 
 w0, w1, w2, w3 {
     position: absolute;
     left: 0px;
     top: 0px;
+    transform-origin: 0% 0%;
     font-family: 'Fira Sans', sans-serif;
     text-transform: uppercase;
     font-weight: 900;
-    height: auto; /* To calibrate using js */
-    width: auto; /* To calibrate using js */
+    height: fit-content; /* To calibrate using js */
+    width: fit-content; /* To calibrate using js */
     white-space: nowrap;
 }
 
