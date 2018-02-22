@@ -139,4 +139,8 @@
     window.addEventListener('orientationChange', (ev) => {
         calibrate();
     });
+    document.fonts.ready.then(function () {
+        for (var i=0; i<slides.length; i++)
+            putWords(i);
+    });
 })();
