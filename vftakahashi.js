@@ -11,36 +11,41 @@
 
   **/
 
-function ratio(tagName) {
-    switch (tagName.toLowerCase()) {
-    case 'w0':
-        return 2.0*Math.sqrt(2.0);
-    case 'w1':
-        return 2.0;
-    case 'w2':
-        return Math.sqrt(2.0);
-    case 'w3':
-        return 1.0;
+/* Completely rewrite with some animation */
+(function() {
+    /* The ratio for each tag */
+    function ratio(tagName) {
+        switch (tagName.toLowerCase()) {
+        case 'w0':
+            return 2.0*Math.sqrt(2.0);
+        case 'w1':
+            return 2.0;
+        case 'w2':
+            return Math.sqrt(2.0);
+        case 'w3':
+            return 1.0;
+        }
+        return 0.0;
     }
-    return 0.0;
-}
-
-function calibrate() {
-    // get screen width and height
+    /* Body and slides */
     var body = document.getElementsByTagName('body')[0];
-    // get the slides width and height (set with css)
     var slides = document.getElementsByTagName('slide');
-    // center the slides
-    for (var i=0; i<slides.length; i++) {
-        slides[i].style.left = ((body.clientWidth - slides[i].clientWidth)   / 2)+'px';
-        slides[i].style.top  = ((body.clientHeight - slides[i].clientHeight) / 2)+'px';
-        var words = slides[i].children;
+    var curSlide = 0;
+    /* Put the slide left, right, or middle*/
+    function putSlide(slideNo, pos) {
+        slides[slideNo].style.left = ((body.clientWidth - slides[slideNo].clientWidth)   / 2 + pos*70) +'px';
+        slides[slideNo].style.top  = ((body.clientHeight - slides[slideNo].clientHeight) / 2)          +'px';
+        if (pos == 0) slides[slideNo].style.opacity = 1.0;
+        else slides[slideNo].style.opacity = 0.0;
+    }
+    function putWords(slideNo) {
+        var words = slides[slideNo].children;
         // calculate the scale from smallest wording(w3) to total
         var scale = 0.0;
         for (var j=0; j<words.length; j++)
             scale += ratio(words[j].tagName);
         // now scale and put the wording in place
-        var unit = slides[i].clientHeight / scale;
+        var unit = slides[slideNo].clientHeight / scale;
         var curPos = 0.0;
         for (var j=0; j<words.length; j++) {
             if (0 == ratio(words[j].tagName)) {
@@ -48,22 +53,25 @@ function calibrate() {
             }
             words[j].style.top = curPos;
             words[j].style.transform = "scale("+
-                (slides[i].clientWidth*1.0/words[j].clientWidth).toFixed(5)+
+                (slides[slideNo].clientWidth*1.0/words[j].clientWidth).toFixed(5)+
                 ","+
                 (unit*ratio(words[j].tagName)/words[j].clientHeight).toFixed(5)+
                 ")";
             curPos += unit*ratio(words[j].tagName);
         }
     }
-}
-
-document.addEventListener("DOMContentLoaded", function(ev) {
-    calibrate();
-
-    var slides = document.getElementsByTagName('slide');
-    var curSlide = 0;
-    slides[curSlide].style.opacity = 1.0;
-
+    function calibrate() {
+        // get screen width and height
+        // get the slides width and height (set with css)
+        // center the slides
+        for (var i=0; i<slides.length; i++) {
+            if (i<curSlide) putSlide(i, -1);
+            else if (i>curSlide) putSlide(i, 1);
+            else putSlide(i, 0);
+            putWords(i);
+        }
+    }
+    calibrate(); // page load calibrate
     var noteShowing = false;
     var noteTag;
     function showNote() {
@@ -80,22 +88,20 @@ document.addEventListener("DOMContentLoaded", function(ev) {
         noteTag.style.opacity = 0.0;
         noteShowing = false;
     }
-
     function nextSlide() {
         if (curSlide < slides.length-1) {
-            slides[curSlide].style.opacity = 0.0;
+            putSlide(curSlide, -1);
             curSlide++;
-            slides[curSlide].style.opacity = 1.0;
+            putSlide(curSlide, 0);
         }
     }
     function previousSlide() {
         if (curSlide > 0) {
-            slides[curSlide].style.opacity = 0.0;
+            putSlide(curSlide, 1);
             curSlide--;
-            slides[curSlide].style.opacity = 1.0;
+            putSlide(curSlide, 0);
         }
     }
-
     document.addEventListener("click", function(ev) {
         var body = document.getElementsByTagName('body')[0];
         if (noteShowing)
@@ -127,10 +133,10 @@ document.addEventListener("DOMContentLoaded", function(ev) {
             break;
         }
     });
-});
-window.addEventListener('resize', (ev) => {
-    calibrate();
-});
-window.addEventListener('orientationChange', (ev) => {
-    calibrate();
-});
+    window.addEventListener('resize', (ev) => {
+        calibrate();
+    });
+    window.addEventListener('orientationChange', (ev) => {
+        calibrate();
+    });
+})();
